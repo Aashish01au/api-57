@@ -1,12 +1,17 @@
+const AuthRequest = require("./auth.request")
+const authSvc = require("./auth.services")
+
 class AuthController{
-    register(req,res,next){
+     async register(req,res,next){
         try {
-            let data= req.body
+            let mapped = new AuthRequest(req).transformRegisterData()
+            let userDetails = await authSvc.storeBanner(mapped)
             res.json({
-                result:data,
+                result:userDetails,
                 message:"User register Page"
             })
         } catch (exception) {
+            
          next(exception)   
         }
     }
