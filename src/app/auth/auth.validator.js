@@ -31,7 +31,8 @@ let updateUserSchema = z.object({
 })
 
 let forgetPasswordSchema= z.object({
-    password:z.string().email().nonempty()
+   email:z.string().email().nonempty()
+
 })
 
 module.exports ={

@@ -27,6 +27,18 @@ class AuthServices{
             throw exception
         }
     }
+
+    async getResetMessage(name,token){
+        try {
+            return `
+            <h1>Dear ${name}</h1><br>
+            <h1>ur reset password token is ${token}</h1><br>
+            <h1>Thank you</h1>
+            `
+        } catch (exception) {
+            throw exception
+        }
+    }
 }
 const authSvc = new AuthServices()
 module.exports = authSvc

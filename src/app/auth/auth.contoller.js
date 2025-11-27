@@ -1,3 +1,4 @@
+const generateRandomString = require("../../helpers/helpers")
 const mailSvc = require("../../services/mail.services")
 const AuthRequest = require("./auth.request")
 const authSvc = require("./auth.services")
@@ -46,8 +47,28 @@ class AuthController{
     }
     async forgetPasssword(req,res,next){
         try {
+            let email= req.body.email
+            let userdetails = await authSvc.getUserByFilter({
+                email:email
+            })
+
+            if(!userdetails){
+                next({code:401,message:"User does not exist"})
+            }else{
+               let user=userdetails[0]
+                user.forgetToken=generateRandomString()
+                let date = new Date()
+                date.setUTCHours(date.getUTCHours()+2)
+                user.validatedTill=date
+                await user.save()
+                let message = authSvc.getResetMessage(user.name,user.forgetToken)
+
+                await mailSvc.sendEmail(user.email,"Reset Password message",message)
+            }
             res.json({
-                result:null,
+                result:{
+                    details:user
+                },
                 message:"Check ur email to reset ur password",
                 meta:null
             })

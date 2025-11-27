@@ -33,6 +33,7 @@ class MailServices{
                 return false
             }
         } catch (exception) {
+            console.log(exception)
             throw {code:500, message:"Error Sending Email"}
         }
     }
