@@ -44,6 +44,17 @@ class AuthController{
             next(exception)
         }
     }
+    async forgetPasssword(req,res,next){
+        try {
+            res.json({
+                result:null,
+                message:"Check ur email to reset ur password",
+                meta:null
+            })
+        } catch (exception) {
+            next(exception)
+        }
+    }
 }
 
 const authCtrl = new AuthController()
