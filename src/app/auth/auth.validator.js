@@ -29,6 +29,10 @@ let updateUserSchema = z.object({
     phone:z.string(),
     role:z.string().regex(/seller|admin|customer/)
 })
+let loginSchema=z.object({
+    email:z.string().email().nonempty(),
+    password:z.string().nonempty(),
+})
 
 let forgetPasswordSchema= z.object({
    email:z.string().email().nonempty()
@@ -40,5 +44,6 @@ module.exports ={
     activateUserSchema,
     updateUserSchema,
     resetUserSchema,
-    forgetPasswordSchema
+    forgetPasswordSchema,
+    loginSchema
 }

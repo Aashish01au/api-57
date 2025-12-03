@@ -1,31 +1,36 @@
 const jwt = require("jsonwebtoken")
+const authSvc = require("../app/auth/auth.services")
 require("dotenv").config()
-const checkLoggin = (req,res,next)=>{
+const checkLoggin = async (req,res,next)=>{
     try {
         let token = null
-
         if(req.query["token"]){
             token = req.query["token"]
         }
-
         if(req.headers["authorization"]){
             token = req.headers["authorization"]
         }
-
+        console.log(token)
         if(!token){
-            next({code:403, message:"Token is requiredd"})
+            next({code:403, message:"Token is empty or required!!"})
         }else{
-            token= token.split(" ").pop()
-           let  data = jwt.verify(token,process.env.JWT_SECRET)
-           if(!token){
-            next({code:403, message:"token does not set , empty or null"})
-           }else{
-            if(!data.hasOwnProperty("_id")){
-                next({code:401, message:"User does not exist"})
+            token = (token.split(" ")).pop()
+            if(!token){
+                next({code:403, message:"Token is nnot set yet.."})
             }else{
-            let user = data
+                let data = jwt.verify(token,process.env.JWT_SECRET)
+                if(data.hasOwnProperty("_id")===null){
+                    next({code:403, message:"User does   not exist anymore"})
+                }else{
+                    console.log(data)
+                    let userDetails = await authSvc.getUserByFilter(_id=data) 
+                    if(!userDetails){
+                        next({code:403, message:"User does not exist ..constacts to ur admin"})
+                    } 
+                    req.authUser = userDetails[0]
+                    next()
+                }
             }
-           }
         }
     } catch (exception) {
         next(exception)

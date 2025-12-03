@@ -19,6 +19,14 @@ class AuthServices{
         }
     }
 
+    async getUserById(id){
+        try {
+            let user = await UserModel.findById(id)
+            return user
+        } catch (exception) {
+            throw exception 
+        }
+    }
     async updateUser(id,data){
         try {
             let user = await UserModel.findByIdAndUpdate(id,data)
@@ -28,11 +36,11 @@ class AuthServices{
         }
     }
 
-    async getResetMessage(name,token){
+    async getResetMessage(name,forgetToken){
         try {
             return `
             <h1>Dear ${name}</h1><br>
-            <h1>ur reset password token is ${token}</h1><br>
+            <h1>ur reset password token is ${forgetToken}</h1><br>
             <h1>Thank you</h1>
             `
         } catch (exception) {
