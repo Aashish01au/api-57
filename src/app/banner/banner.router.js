@@ -9,4 +9,7 @@ const bannerRouter = require("express").Router()
 bannerRouter.route("/")
     .post(checkLoggin,checkPermission("admin"),validatedSchema(createBannerSchema),bannerCtrl.createBanner)
 
+bannerRouter.route("/:id")
+    .get(checkLoggin,checkPermission("/admin"),bannerCtrl.getBannerDetailById)
+
 module.exports = bannerRouter

@@ -28,6 +28,15 @@ class BannerServices{
         }
     }
 
+    async getBannerById(id){
+        try {
+            let banner = await  BannerModel.findById(id)
+            return banner
+        } catch (exception) {
+            throw exception
+        }
+    }
+
 
 }
 

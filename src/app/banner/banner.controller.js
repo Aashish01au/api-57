@@ -14,6 +14,15 @@ class BannerControler{
             next(exception)
         }
     }
+
+    async getBannerDetailById(req,res,next){
+        try {
+            let id = req.params.id
+            let banner = await bannerSvc.getBannerById(id)
+        } catch (exception) {
+            next(exception)
+        }
+    }
 }
 const bannerCtrl = new BannerControler()
 module.exports = bannerCtrl
