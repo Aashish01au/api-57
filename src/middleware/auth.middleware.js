@@ -1,33 +1,31 @@
 const jwt = require("jsonwebtoken")
 const authSvc = require("../app/auth/auth.services")
 require("dotenv").config()
-const checkLoggin = async (req,res,next)=>{
+const checkLogin = async (req,res,next)=>{
     try {
         let token = null
-        if(req.query["token"]){
-            token = req.query["token"]
+        if(req.query['token']){
+            token=req.query['token']
         }
         if(req.headers["authorization"]){
-            token = req.headers["authorization"]
+            token=req.headers["authorization"]
         }
-        console.log(token)
         if(!token){
-            next({code:403, message:"Token is empty or required!!"})
+            next({code:403, message:"Token is requireddd"})
         }else{
             token = (token.split(" ")).pop()
             if(!token){
-                next({code:403, message:"Token is nnot set yet.."})
+                next({code:401, message :" Token is empty or null"})
             }else{
-                let data = jwt.verify(token,process.env.JWT_SECRET)
-                if(data.hasOwnProperty("_id")===null){
-                    next({code:403, message:"User does   not exist anymore"})
+                const data = jwt.verify(token,process.env.JWT_SECRET)
+                if(!data.hasOwnProperty('_id')){
+                    next({code:401, message:"Invalid token"})
                 }else{
-                    console.log(data)
-                    let userDetails = await authSvc.getUserByFilter(_id=data) 
-                    if(!userDetails){
-                        next({code:403, message:"User does not exist ..constacts to ur admin"})
-                    } 
-                    req.authUser = userDetails[0]
+                    let user = await authSvc.findUserByFilter({_id:data._id})
+                    if(!user){
+                        next({code:404, message:"User does not exist anymore..."})
+                    }
+                    req.authUser=user
                     next()
                 }
             }
@@ -37,4 +35,4 @@ const checkLoggin = async (req,res,next)=>{
     }
 }
 
-module.exports = checkLoggin
+module.exports = checkLogin

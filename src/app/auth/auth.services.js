@@ -10,9 +10,9 @@ class AuthServices{
         }
     }
 
-    async getUserByFilter(data){
+    async findUserByFilter(filter={}){
         try {
-            let user = await UserModel.find(data)
+            let user = await UserModel.find(filter)
             return user
         } catch (exception) {
             throw exception
