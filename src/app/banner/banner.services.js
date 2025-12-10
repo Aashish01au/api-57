@@ -28,6 +28,29 @@ class BannerServices{
         }
     }
 
+    async getAllBannerDetails(filter={},paging={skip:0,limit:0}){
+        try {
+            let banners = await BannerModel.find({
+                filter
+            })
+            .populate("createdBy",("id","role","name"))
+            .sort({"_id":"desc"})
+            .limit(paging.limit)
+            .skip(paging.skip)
+
+            return banners
+        } catch (exception) {
+            throw exception
+        }
+    }
+    async totalCount(filter){
+        try {
+            return await BannerModel.countDocuments(filter)
+        } catch (exception) {
+            throw exception
+        }
+    }
+
     async getBannerById(id){
         try {
             let banner = await  BannerModel.findById(id)

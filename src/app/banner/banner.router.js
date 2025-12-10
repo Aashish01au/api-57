@@ -8,7 +8,7 @@ const bannerRouter = require("express").Router()
 
 bannerRouter.route("/")
     .post(checkLoggin,checkPermission("admin"),validatedSchema(createBannerSchema),bannerCtrl.createBanner)
-
+    .get(checkLoggin,checkPermission("admin"),bannerCtrl.getAllBannerDetails)
 bannerRouter.route("/:id")
     .get(checkLoggin,checkPermission("admin"),bannerCtrl.getBannerDetailById)
 

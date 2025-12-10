@@ -15,6 +15,42 @@ class BannerControler{
         }
     }
 
+    async getAllBannerDetails(req,res,next){
+        try {
+            let search = req.query.search || null
+            let limit = req.query.limit || 10
+            let currentPage = req.query.page ? Number(req.query.page) :1
+            let skip = (currentPage-1)*limit
+
+            let filter = {}
+
+            if(search){
+                filter= {
+                    ...filter,
+                    $or:{
+                        name:(RegExp(search,"i")),
+                        title:(RegExp(search,"i")),
+                        link:(RegExp(search,"i")),
+                        status:(RegExp(search,"i"))
+                    }
+                }
+            }
+
+            let count = await bannerSvc.totalCount(filter)
+
+            let bannersDetails = await bannerSvc.getAllBannerDetails(filter,{skip:skip,limit:limit,})
+            res.json({
+                result:bannersDetails,
+                message:"Banner details Fetched Successfully...",
+                meta:{
+                    totalCounts : count,
+                    page:currentPage,
+                }
+            })
+        } catch (exception) {
+            next(exception)
+        }
+    }
     async getBannerDetailById(req,res,next){
         try {
             let id = req.params.id
